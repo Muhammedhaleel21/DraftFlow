@@ -1,6 +1,14 @@
+import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
+function AuthPage() {
 
-const Auth = () => {
+    const navigate = useNavigate();
+
+    const handleLogin = () => {
+        navigate("/home");
+    }
+
   return (
     <>
         <div className='w-full min-h-screen bg-gradient-to-r from-indigo-400 to-purple-500 flex items-center justify-center px-4'>
@@ -37,7 +45,10 @@ const Auth = () => {
                         className='w-full bg-gray-100 px-4 py-3 rounded-full mb-6 outline-none'
                     />
 
-                    <button className='w-full bg-gradient-to-r from-indigo-400 to-purple-500 text-white py-3 rounded-full font-semibold cursor-pointer'>
+                    <button 
+                        className='w-full bg-gradient-to-r from-indigo-400 to-purple-500 text-white py-3 rounded-full font-semibold cursor-pointer'
+                        onClick={handleLogin}
+                    >
                         SIGN IN
                     </button>
 
@@ -66,4 +77,4 @@ const Auth = () => {
   )
 }
 
-export default Auth
+export default AuthPage
