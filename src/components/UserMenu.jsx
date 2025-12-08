@@ -11,8 +11,8 @@ const UserMenu = () => {
                 setOpen(false);
             }
         }
-        document.addEventListener("click", handler);
-        return () => document.removeEventListener("click", handler);
+        document.addEventListener("mousedown", handler);
+        return () => document.removeEventListener("mousedown", handler);
     }, []);
 
 

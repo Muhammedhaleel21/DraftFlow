@@ -1,10 +1,17 @@
 import React, { useState } from 'react'
 import logo from '../assets/logo1_bg.png'
 import UserMenu from '../components/UserMenu';
+import { useNavigate } from 'react-router-dom';
 
 function HomePage() {
 
+    const navigate = useNavigate();
+    
     const [text, setText] = useState("");
+
+    const handleTransformText = () => {
+        navigate("/editor");
+    }
 
   return (
     <>
@@ -106,13 +113,16 @@ function HomePage() {
 
 
             <div className='flex justify-center gap-4 mt-10'>
-                <button className='px-8 py-3 rounded-xl bg-purple-600 hover:bg-purple-700 transition font-semibold shadow-lg cursor-pointer'>
+                <button 
+                    className='px-8 py-3 rounded-xl bg-purple-600 hover:bg-purple-700 transition font-semibold shadow-lg cursor-pointer'
+                    onClick={handleTransformText}
+                >
                     Transform Text
                 </button>
 
                 <button
                     onClick={() => setText("")}
-                    className='px-8 py-3 rounded-xl bg-gray-700 hover:bg-gray-600 transition font-semibold'
+                    className='px-8 py-3 rounded-xl bg-gray-700 hover:bg-gray-600 transition font-semibold cursor-pointer'
                 >
                     Clear All
                 </button>
