@@ -10,7 +10,7 @@ const DocumentContent = () => {
 
             <h2 className="text-2xl font-semibold text-blue-700 mt-6">Subheading</h2>
 
-            <p className="mt-2 text-gray-700">adads</p>
+            <p className="mt-2 text-gray-700">qwertyuiopjhgfdsasdfghnbvcxzxcvbnmhgfdssdrtyuitrewnmnbvcxzasdfghjklpoiuytrewqqqqqqwertyuioplkjhgfdsazxcvbnm,</p>
         </div>
     </>
   )

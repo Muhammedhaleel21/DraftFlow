@@ -113,8 +113,16 @@ function HomePage() {
 
 
             <div className='flex justify-center gap-4 mt-10'>
-                <button 
-                    className='px-8 py-3 rounded-xl bg-purple-600 hover:bg-purple-700 transition font-semibold shadow-lg cursor-pointer'
+                <button className='
+                    px-8 py-3 rounded-xl bg-gradient-to-br from-[#6366f1] to-[#8b5cf6] transition font-semibold shadow-lg cursor-pointer
+                    flex items-center justify-center gap-3
+                    relative overflow-hidden
+                    text-white font-semibold
+                    shadow-[0_0_20px_rgba(99,102,241,0.3)]
+                    hover:-translate-y-[3px] hover:scale-[1.02] hover:shadow-[0_0_60px_rgba(99,102,241,0.4)]
+                    active:-translate-y-[1px] active:scale-[0.98]
+                    transition-all duration-300 '
+
                     onClick={handleTransformText}
                 >
                     Transform Text
@@ -122,7 +130,16 @@ function HomePage() {
 
                 <button
                     onClick={() => setText("")}
-                    className='px-8 py-3 rounded-xl bg-gray-700 hover:bg-gray-600 transition font-semibold cursor-pointer'
+                    className='
+                        px-8 py-3 rounded-xl bg-gray-700 hover:bg-gray-600 transition font-semibold cursor-pointer
+                        border border-white/20
+                        backdrop-blur-md
+                        text-white/70
+                        text-[clamp(0.875rem,2vw,1rem)]
+                        hover:bg-white/10 hover:text-white hover:-translate-y-[2px]
+                        transition-all duration-300
+                           
+                    '
                 >
                     Clear All
                 </button>
