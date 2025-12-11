@@ -54,6 +54,9 @@ const ToolBar = () => {
                 `}>
                     {status === "saving" ? "Saving..." : "Saved"}
                 </button>
+            </div>
+
+            <div className='flex items-center gap-14 text-gray-700 text-xl space-x-6 ml-auto'>
                 
                 <FaUndo className="cursor-pointer -mr-0" />
                 <FaRedo className="cursor-pointer -mr-0" />
