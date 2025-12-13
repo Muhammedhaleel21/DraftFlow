@@ -27,12 +27,12 @@ function AuthPage() {
 
                 <div
                   className={`
-                    form-container login-container absolute top-0 h-full w-1/2
-                    transition-all duration-700 ease-in-out
-                    ${isSignIn ? "translate-x-0 opacity-100 z-20" : "translate-x-full opacity-0 z-10"}
+                    form-container login-container absolute top-0 h-full w-full md:w-1/2
+                    md:transition-all md:duration-700 md:ease-in-out
+                    ${isSignIn ? "translate-x-0 opacity-100 z-20" : "translate-x-full md:translate-x-full opacity-0 z-10"}
                   `}
                 >
-                    <div className="w-full h-full px-12 flex flex-col items-center justify-center">
+                    <div className="w-full h-full px-6 md:px-12 flex flex-col items-center justify-center">
                         <h2 className="text-3xl font-bold mb-3 text-gray-900">Welcome Back!</h2>
                         <p className="text-gray-500 mb-6 text-center">Sign in to continue</p>
 
@@ -78,13 +78,13 @@ function AuthPage() {
 
                 <div
                     className={`
-                        form-container signup-container absolute top-0 h-full w-1/2 left-0
-                        transition-all duration-700 ease-in-out
-                        ${isSignIn ? "opacity-0 z-10" : "opacity-100 z-20 translate-x-full"}
+                        form-container signup-container absolute top-0 h-full w-full md:w-1/2 left-0
+                        md:transition-all md:duration-700 md:ease-in-out
+                        ${isSignIn ? "translate-x-full opacity-0 z-10" : "translate-x-0 md:translate-x-full opacity-100 z-20"}
                     `}
                 >
 
-                    <div className="w-full h-full px-12 flex flex-col items-center justify-center">
+                    <div className="w-full h-full px-6 md:px-12 flex flex-col items-center justify-center">
                         <h2 className="text-3xl font-bold mb-2 text-gray-900">Create Account</h2>
                         <p className="text-gray-500 mb-6 text-center">Join us today!</p>
 
@@ -139,6 +139,7 @@ function AuthPage() {
            
                 <div
                     className={`
+                        hidden md:block
                         overlay-container absolute top-0 left-1/2 w-1/2 h-full overflow-hidden
                         transition-transform duration-700 ease-in-out z-30
                         ${isSignIn ? "translate-x-0" : "-translate-x-full"}

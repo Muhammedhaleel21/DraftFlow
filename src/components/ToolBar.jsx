@@ -22,7 +22,7 @@ const ToolBar = () => {
 
   return (
     <>
-        <div className='flex items-center pb-3 pt-4 px-4 border-b bg-[#0E0F1A]'>
+        <div className='flex items-center pb-3 pt-4 px-4 border-b bg-[#1a1a24]'>
         
             
             <input
