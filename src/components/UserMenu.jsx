@@ -1,9 +1,14 @@
+import { signOut } from 'firebase/auth';
+import { auth } from '../firebase/auth';
+import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useRef, useState } from 'react'
 
 const UserMenu = () => {
 
     const [open, setOpen] = useState(false);
     const menuRef = useRef();
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const handler = (e) => {
@@ -14,6 +19,16 @@ const UserMenu = () => {
         document.addEventListener("mousedown", handler);
         return () => document.removeEventListener("mousedown", handler);
     }, []);
+
+    const handleLogout = async () => {
+        try {
+            await signOut(auth);
+            console.log("User signed out successfully");
+            navigate("/");
+        } catch (error) {
+            console.error("Error signing out:", error.message);
+        }
+    };
 
 
 
@@ -46,7 +61,10 @@ const UserMenu = () => {
                         <li className='cursor-pointer hover:bg-white/10 px-3 py-2 rounded-lg'>
                             Privacy
                         </li>
-                        <li className='cursor-pointer hover:bg-white/10 px-3 py-2 rounded-lg text-red-400'>
+                        <li 
+                            className='cursor-pointer hover:bg-white/10 px-3 py-2 rounded-lg text-red-400'
+                            onClick={handleLogout}
+                        >
                             Logout
                         </li>
                     </ul>

@@ -185,7 +185,7 @@ function AuthPage() {
                         <p className="block md:hidden text-gray-500 mt-6">
                             Don't have an account?{" "}
                             <span onClick={toggleMode} className="text-[#764ba2] font-semibold underline cursor-pointer hover:text-[#667eea] transition-colors">
-                                Sign up here
+                                Sign up
                             </span>
                         </p>
                     </div>
@@ -267,7 +267,7 @@ function AuthPage() {
                         <p className="block md:hidden text-gray-500 mt-6">
                             Already have an account?{" "}
                             <span onClick={toggleMode} className="text-[#764ba2] font-semibold underline cursor-pointer hover:text-[#667eea] transition-colors">
-                                Sign in here
+                                Sign in
                             </span>
                         </p>
                     </div>
