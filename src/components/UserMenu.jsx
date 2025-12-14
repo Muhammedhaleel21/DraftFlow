@@ -3,6 +3,18 @@ import { auth } from '../firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useRef, useState } from 'react'
 
+
+const getInitials = (name) => {
+    if (!name) return "" ;
+
+    const words = name.trim().split(" ");
+    
+    return words.length === 1
+        ? words[0].charAt(0).toUpperCase()
+        : (words[0][0] + words[words.length -1][0]).toUpperCase();
+};
+
+
 const UserMenu = () => {
 
     const [open, setOpen] = useState(false);
@@ -31,6 +43,10 @@ const UserMenu = () => {
     };
 
 
+    const user = auth.currentUser;
+    const initials = getInitials(user?.displayName);
+
+
 
   return (
     <>
@@ -40,7 +56,7 @@ const UserMenu = () => {
                 onClick={() => setOpen(!open)} 
                 className='w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center font-semibold text-white hover:bg-purple-600 transition cursor-pointer'
             >
-                LU
+                {initials}
             </button>
 
             {open && (
