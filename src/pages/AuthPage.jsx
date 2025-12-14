@@ -1,23 +1,124 @@
+import {
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    signInWithPopup,
+    updateProfile,
+}from "firebase/auth";
+import { auth, googleProvider } from "../firebase/auth";
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function AuthPage() {
 
 
-  const [isSignIn, setIsSignIn] = useState(true);
+    const [isSignIn, setIsSignIn] = useState(true);
 
-  const navigate = useNavigate();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
-  const handleSignIn = () => {
-    navigate("/home");
-  }
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [fullName, setFullName] = useState("");
 
-  const handleSignUp = () => {
-    setIsSignIn(!isSignIn);
-  }
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
-  const toggleMode = () => setIsSignIn(!isSignIn);
-  
+    const navigate = useNavigate();
+
+    const validateSignIn = () => {
+        if (!email || !password) {
+            return "Email and password are required."
+        }
+        return null;
+    }
+
+    const validateSignUp = () => {
+        if (!fullName || !email || !password || !confirmPassword) {
+            return "All fields are required.";
+        }
+
+        if (password.length < 6) {
+            return "Password must be at least 6 characters.";
+        }
+
+        if (password !== confirmPassword) {
+            return "Passwords do not match.";
+        }
+
+        return null;
+
+    }
+
+    const handleSignIn = async () => {
+        setError("");
+
+        const validationError = validateSignIn();
+        if (validationError) {
+            setError(validationError);
+            return;
+        }
+
+        try {
+            setLoading(true);
+
+            await signInWithEmailAndPassword(auth, email, password);
+            console.log("User signed in successfully");
+            navigate("/home");
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleSignUp = async () => {
+        setError("");
+
+        const validationError = validateSignUp();
+        if (validationError) {
+            setError(validationError);
+            return;
+        }
+
+        try {
+            setLoading(true);
+            const userCredential = await createUserWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
+
+            await updateProfile(userCredential.user, {
+                displayName: fullName,
+            });
+
+            console.log("User signed up successfully");
+            setIsSignIn(true);
+
+        } catch (error) {
+            console.error("Error signing up:", error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleGoogleLogin = async () => {
+        try {
+            await signInWithPopup(auth, googleProvider);
+            navigate("/home");
+            console.log("User signed in with Google successfully");
+        } catch (error) {
+            console.error("Error signing in with Google:", error);
+        }
+    };
+
+    const toggleMode = () => {
+        setIsSignIn(!isSignIn);
+
+        setError("");
+        setFullName("");
+        setConfirmPassword("");
+    };
 
   return (
     <>
@@ -36,7 +137,10 @@ function AuthPage() {
                         <h2 className="text-3xl font-bold mb-3 text-gray-900">Welcome Back!</h2>
                         <p className="text-gray-500 mb-6 text-center">Sign in to continue</p>
 
-                        <button className="google-btn bg-white border-2 border-gray-300 w-full max-w-sm py-3 rounded-full flex items-center justify-center gap-2 hover:bg-gray-100 transition-all duration-200 cursor-pointer">
+                        <button
+                            onClick={handleGoogleLogin} 
+                            className="google-btn bg-white border-2 border-gray-300 w-full max-w-sm py-3 rounded-full flex items-center justify-center gap-2 hover:bg-gray-100 transition-all duration-200 cursor-pointer"
+                        >
                             <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" className="w-5" />
                             Continue with Google
                         </button>
@@ -51,22 +155,34 @@ function AuthPage() {
                             type="email"
                             placeholder="Email"
                             className="input-field w-full max-w-sm bg-gray-100 px-4 py-3 rounded-full mb-4 outline-none focus:bg-gray-200 transition-all duration-200"
+                            required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
 
                         <input
                             type="password"
                             placeholder="Password"
                             className="input-field w-full max-w-sm bg-gray-100 px-4 py-3 rounded-full mb-6 outline-none focus:bg-gray-200 transition-all duration-200"
+                            required
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                         />
+
+                        { error && (
+                            <p className="text-red-500 text-sm mb-3">
+                                {error}
+                            </p>
+                        )}
 
                         <button
                             onClick={handleSignIn}
                             className="btn w-full max-w-sm bg-gradient-to-br from-[#667eea] to-[#764ba2] text-white py-3 rounded-full font-semibold hover:-translate-y-1 transition-all duration-300 shadow-md hover:shadow-[0_7px_14px_rgba(118,75,162,0.4)] cursor-pointer"
                         >
-                            SIGN IN
+                            {loading ? "Signing In..." : "SIGN IN"}
                         </button>
 
-                        <p className="text-gray-500 mt-6">
+                        <p className="block md:hidden text-gray-500 mt-6">
                             Don't have an account?{" "}
                             <span onClick={toggleMode} className="text-[#764ba2] font-semibold underline cursor-pointer hover:text-[#667eea] transition-colors">
                                 Sign up here
@@ -88,7 +204,10 @@ function AuthPage() {
                         <h2 className="text-3xl font-bold mb-2 text-gray-900">Create Account</h2>
                         <p className="text-gray-500 mb-6 text-center">Join us today!</p>
 
-                        <button className="google-btn bg-white border-2 border-gray-300 w-full max-w-sm py-3 rounded-full flex items-center justify-center gap-2 hover:bg-gray-100 transition-all duration-200 cursor-pointer">
+                        <button
+                            onClick={handleGoogleLogin} 
+                            className="google-btn bg-white border-2 border-gray-300 w-full max-w-sm py-3 rounded-full flex items-center justify-center gap-2 hover:bg-gray-100 transition-all duration-200 cursor-pointer"
+                        >
                             <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" className="w-5" />
                             Sign up with Google
                         </button>
@@ -102,32 +221,50 @@ function AuthPage() {
                         <input 
                             type="text" 
                             placeholder="Full Name" 
-                            className="input-field w-full max-w-sm bg-gray-100 px-4 py-3 rounded-full mb-3 outline-none focus:bg-gray-200 transition-all duration-200" 
+                            className="input-field w-full max-w-sm bg-gray-100 px-4 py-3 rounded-full mb-3 outline-none focus:bg-gray-200 transition-all duration-200"
+                            required
+                            value={fullName}
+                            onChange={(e) => setFullName(e.target.value)} 
                         />
                         <input 
                             type="email" 
                             placeholder="Email" 
                             className="input-field w-full max-w-sm bg-gray-100 px-4 py-3 rounded-full mb-3 outline-none focus:bg-gray-200 transition-all duration-200" 
+                            required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                         <input 
                             type="password" 
                             placeholder="Password" 
                             className="input-field w-full max-w-sm bg-gray-100 px-4 py-3 rounded-full mb-3 outline-none focus:bg-gray-200 transition-all duration-200" 
+                            required
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                         />
                         <input 
                             type="password" 
                             placeholder="Confirm Password" 
-                            className="input-field w-full max-w-sm bg-gray-100 px-4 py-3 rounded-full mb-6 outline-none focus:bg-gray-200 transition-all duration-200" 
+                            className="input-field w-full max-w-sm bg-gray-100 px-4 py-3 rounded-full mb-6 outline-none focus:bg-gray-200 transition-all duration-200"
+                            required
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)} 
                         />
 
+                        {error && (
+                            <p className="text-red-500 text-sm mb-3" >
+                                {error}
+                            </p>
+                        )}
+
                         <button
-                            onClick={handleSignUp}
+                            onClick={handleSignUp} disabled={loading}
                             className="btn w-full max-w-sm bg-gradient-to-br from-[#667eea] to-[#764ba2] text-white py-3 rounded-full font-semibold hover:-translate-y-1 transition-all duration-300 shadow-md hover:shadow-[0_7px_14px_rgba(118,75,162,0.4)] cursor-pointer"
                         >
-                            SIGN UP
+                            {loading ? "Creating Account..." : "SIGN UP"}
                         </button>
 
-                        <p className="text-gray-500 mt-6">
+                        <p className="block md:hidden text-gray-500 mt-6">
                             Already have an account?{" "}
                             <span onClick={toggleMode} className="text-[#764ba2] font-semibold underline cursor-pointer hover:text-[#667eea] transition-colors">
                                 Sign in here
