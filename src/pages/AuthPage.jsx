@@ -117,6 +117,8 @@ function AuthPage() {
 
         setError("");
         setFullName("");
+        setEmail("");
+        setPassword("");
         setConfirmPassword("");
     };
 
