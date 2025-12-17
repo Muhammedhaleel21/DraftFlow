@@ -2,6 +2,7 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useRef, useState } from 'react'
+import EditProfileModal from './EditProfileModal';
 
 
 const getInitials = (name) => {
@@ -17,7 +18,9 @@ const getInitials = (name) => {
 
 const UserMenu = () => {
 
-    const [open, setOpen] = useState(false);
+    const [openMenu, setOpenMenu] = useState(false);
+    const [openProfile, setOpenProfile] = useState(false);
+
     const menuRef = useRef();
 
     const navigate = useNavigate();
@@ -25,7 +28,7 @@ const UserMenu = () => {
     useEffect(() => {
         const handler = (e) => {
             if(menuRef.current && !menuRef.current.contains(e.target)){
-                setOpen(false);
+                setOpenMenu(false);
             }
         }
         document.addEventListener("mousedown", handler);
@@ -53,16 +56,21 @@ const UserMenu = () => {
         <div className='relative' ref={menuRef}>
 
             <button
-                onClick={() => setOpen(!open)} 
+                onClick={() => setOpenMenu(!openMenu)} 
                 className='w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center font-semibold text-white hover:bg-purple-600 transition cursor-pointer'
             >
                 {initials}
             </button>
 
-            {open && (
+            {openMenu && (
                 <div className='absolute right-0 mt-3 w-44 bg-[#121528] text-white rounded-xl shadow-lg border border-white/10 p-3 animate-fade z-50'>
                     <ul className='space-y-2'>
-                        <li className='cursor-pointer hover:bg-white/10 px-3 py-2 rounded-lg'>
+                        <li
+                            onClick={() => {
+                                setOpenProfile(true);
+                                setOpenMenu(false);
+                            }} 
+                            className='cursor-pointer hover:bg-white/10 px-3 py-2 rounded-lg'>
                             Profile
                         </li>
                         <li className='cursor-pointer hover:bg-white/10 px-3 py-2 rounded-lg'>
@@ -87,6 +95,15 @@ const UserMenu = () => {
                 </div>
             )}
         </div>
+
+
+        {openProfile && (
+            <EditProfileModal 
+                currentName={user.displayName}
+                onClose={() => setOpenProfile(false)}
+                initials={initials}
+            />
+        )}
     </>
   )
 }
