@@ -2,7 +2,7 @@ import { auth } from '../firebase/auth';
 import { updateProfile } from 'firebase/auth';
 import React, { useState } from 'react'
 
-const EditProfileModal = ({ currentName, onClose, initials }) => {
+const EditProfileModal = ({ currentName, onClose, initials, email }) => {
 
     const [displayName, setDisplayName] = useState(currentName);
 
@@ -19,23 +19,27 @@ const EditProfileModal = ({ currentName, onClose, initials }) => {
 
   return (
     <>
+
         <div
             onClick={onClose} 
-            className='fixed inset-0 bg-black/60 z-40'
-        />
-
-        <div className='fixed inset-0 z-50 flex items-center justify-center px-4'>
-            <div className='w-full max-w-md rounded-2xl bg-[#1e1e1e] text-white p-6 shadow-2xl'>
+            className='fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4'
+        >
+            <div
+                onClick={(e) => e.stopPropagation()} 
+                className='w-full max-w-md rounded-2xl bg-[#1e1e1e] text-white p-6 shadow-2xl'
+            >
 
                 <h2 className='text-lg font-semibold mb-6'>Edit Profile</h2>
 
-                <div className='flex justify-center mb-6'>
+                <div className='flex justify-center mb-2'>
                     <div className='relative'>
                         <div className='w-24 h-24 bg-purple-500 rounded-full flex items-center justify-center font-semibold text-white text-3xl'>
                             {initials}
                         </div>
                     </div>
                 </div>
+                <p className='text-sm font-sm flex items-center justify-center text-gray-400 mb-5'>{email}</p>
+
 
                 <div className='mb-4'>
                     <label className='text-sm text-gray-400'>Display Name</label>

@@ -100,6 +100,7 @@ const UserMenu = () => {
         {openProfile && (
             <EditProfileModal 
                 currentName={user.displayName}
+                email = {user.email}
                 onClose={() => setOpenProfile(false)}
                 initials={initials}
             />
