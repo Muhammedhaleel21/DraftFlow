@@ -1,18 +1,82 @@
-import React from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import logo from '../assets/logo1_bg.png'
 import { AiOutlineStar } from 'react-icons/ai'
 import { FiMic, FiSend } from 'react-icons/fi'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 
 const ChatInterface = () => {
 
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const [messages, setMessages] = useState([]);
+    const [input, setInput] = useState("");
+    
+    const bottomRef = useRef(null);
+    const hasInitialized = useRef(false);
+    
+    useEffect(() => {
+      bottomRef.current?.scrollIntoView({ behavior: "smooth" })
+    }, [messages])
+
+
+    useEffect(() => {
+      if (hasInitialized.current) return;
+
+      if (location.state?.firstMessage) {
+        hasInitialized.current = true;
+        
+        const firstUserMessage = {
+          id : Date.now(),
+          role : "user",
+          content : location.state.firstMessage
+        }
+
+        setMessages([firstUserMessage])
+
+        setTimeout(() => {
+          setMessages((prev) => [
+            ...prev,
+            {
+              id : Date.now() + 1,
+              role : "assistant",
+              content : "Let's get started. How can I assist you with your document today?"
+            }
+          ])
+        }, 800)
+      }
+    }, [location.state])
+
+
+    const handleSend = () => {
+      if (!input.trim()) return;
+
+      const userMessage = {
+        id : Date.now(),
+        role : "user",
+        content : input
+      }
+
+      setMessages((prev) => [...prev, userMessage])
+      setInput("");
+
+      setTimeout(() => {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id : Date.now() + 1,
+            role : "assistant",
+            content : "This is a sample response."
+          }
+        ])
+      }, 1000)
+    }
     
 
   return (
     <>
-      <div className='w-1/3 max-w-lg bg-[#1a1a24] text-white pt-3 flex flex-col min-h-screen'>
+      <div className='w-1/3 max-w-lg bg-[#1a1a24] text-white pt-3 flex flex-col h-screen'>
 
         <div className="flex items-center gap-1 group">
             <div className="
@@ -55,59 +119,67 @@ const ChatInterface = () => {
 
         <div className='w-full h-px bg-white/10 mt-2'></div>
 
-        
-        <div className="w-full max-w-[800px] flex flex-col flex-1 px-0 pb-2 mt-4">
+  
+        <div className='
+          flex-1 overflow-y-auto overflow-x-hidden px-4 mt-4
 
-            <div className="flex flex-col flex-1 overflow-hidden ml-4">
+          [scrollbar-width:thin]
+          [scrollbar-color:rgba(255,255,255,0.3)_transparent]
 
-                <div className="
-                    flex-1 overflow-y-auto min-h-0 p-2 
-                    scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-transparent 
-                    hover:scrollbar-thumb-gray-400
-                ">
+          [&::-webkit-scrollbar]:w-1.5
+          [&::-webkit-scrollbar-thumb]:rounded-full
+          [&::-webkit-scrollbar-track]:bg-transparent
+          hover:[&::-webkit-scrollbar-thumb]:bg-white/50
+          [&::-webkit-scrollbar-thumb]:bg-white/30
+        '>
+          <div className='flex flex-col gap-4 pb-6'>
 
-                    <div className="pr-3 flex flex-col gap-4 pb-6">
-
-                        {/* Received Message */}
-                        <div className="flex justify-start">
-                          <div className="bg-gray-700/60 p-4 rounded-xl text-sm">
-                            Hi there! How can I help you today?
-                          </div>
-                        </div>
-
-                        {/* Sent Message */}
-                        <div className="flex justify-end ">
-                          <div className="bg-purple-500 p-3 rounded-xl text-sm w-fit">
-                            hvjv
-                          </div>
-                        </div>
-
-                        {/* Received Message */}
-                        <div className="flex justify-start">
-                          <div className="bg-gray-700/60 p-4 rounded-xl text-sm">
-                            The requested change could not be applied because the agent failed
-                            to process the instruction. Please provide a clearer instruction.
-                          </div>
-                        </div>
-
-                    </div>
+            {messages.map((msg) => (
+              <div
+                key={msg.id}
+                className={`flex ${
+                  msg.role === "user" ? "justify-end" : "justify-start"
+                }`}
+              >
+                <div
+                  className={`text-sm rounded-xl px-4 py-3 max-w-[75%] break-words ${
+                    msg.role === "user" ? "bg-purple-500" : "bg-gray-700/60"
+                  }`}
+                >
+                  {msg.content}
                 </div>
-            </div>
+              </div>
+            ))}
+
+            <div ref={bottomRef} />
+          </div>
         </div>
 
-        {/* Input box */}
-        <div className="flex items-center bg-[#1b1c2c] border border-white/10 rounded-xl px-4 py-3 mx-3 mb-4 mt-auto">
 
-            <input
+        
+        <div className="shrink-0 flex items-center bg-[#1b1c2c] border border-white/10 rounded-xl px-4 py-3 mx-3 mb-4 mt-auto">
+
+            <textarea
                 type="text"
                 placeholder="Ask anything..."
-                className="flex-1 bg-transparent outline-none text-gray-200"
+                className="flex-1 bg-transparent outline-none text-gray-200 resize-none overflow-hidden"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSend();
+                  } 
+                }}
             />
 
             <AiOutlineStar className="text-gray-400 text-xl mx-3 cursor-pointer" />
             <FiMic className="text-gray-400 text-xl mx-3 cursor-pointer" />
 
-            <button className="w-10 h-10 bg-purple-500 hover:bg-purple-600 rounded-full flex items-center justify-center">
+            <button 
+              onClick={handleSend}
+              className="w-10 h-10 bg-purple-500 hover:bg-purple-600 rounded-full flex items-center justify-center"
+            >
                 <FiSend className="text-white text-xl" />
             </button>
 
@@ -119,8 +191,3 @@ const ChatInterface = () => {
 }
 
 export default ChatInterface
-
-
-
-//bg-[#1a1a24]
-//bg-[#0E0F1A]

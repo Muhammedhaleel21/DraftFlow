@@ -7,10 +7,16 @@ function HomePage() {
 
     const navigate = useNavigate();
     
-    const [text, setText] = useState("");
+    const [input, setInput] = useState("");
 
     const handleTransformText = () => {
-        navigate("/editor");
+        if (!input.trim()) return;
+
+        navigate("/editor", {
+            state : {
+                firstMessage : input
+            }
+        });
     }
 
   return (
@@ -91,8 +97,14 @@ function HomePage() {
             
             <div className='max-w-3xl mx-auto mt-11 bg-white/5 backdrop-blur-lg border border-gray-600/20 rounded-2xl p-6 shadow-xl relative'>
                 <textarea
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter" && !e.shiftKey) {
+                            e.preventDefault();
+                            handleTransformText();
+                        }
+                    }}
                     placeholder="Paste your unformatted text here and watch the magic happen... ✨"
                     className="
                         w-full h-64 bg-[#0f0f1a] 
@@ -107,7 +119,7 @@ function HomePage() {
                     "
                 ></textarea>
                 <div className="text-gray-400 text-right text-sm -mb-3">
-                    {text.length} characters
+                    {input.length} characters
                 </div>
             </div>
 
@@ -129,7 +141,7 @@ function HomePage() {
                 </button>
 
                 <button
-                    onClick={() => setText("")}
+                    onClick={() => setInput("")}
                     className='
                         px-8 py-3 rounded-xl bg-gray-700 hover:bg-gray-600 transition font-semibold cursor-pointer
                         border border-white/20
