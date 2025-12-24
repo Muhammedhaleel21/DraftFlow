@@ -95,7 +95,18 @@ function HomePage() {
             </div>
 
             
-            <div className='max-w-3xl mx-auto mt-11 bg-white/5 backdrop-blur-lg border border-gray-600/20 rounded-2xl p-6 shadow-xl relative'>
+            <div className='
+                max-w-3xl mx-auto mt-11 bg-white/5 backdrop-blur-lg border border-gray-600/20 rounded-2xl p-6 shadow-xl relative
+                
+                [scrollbar-width:thin]
+                [scrollbar-color:rgba(255,255,255,0.3)_transparent]
+
+                [&::-webkit-scrollbar]:w-1.5
+                [&::-webkit-scrollbar-thumb]:rounded-full
+                [&::-webkit-scrollbar-track]:bg-transparent
+                hover:[&::-webkit-scrollbar-thumb]:bg-white/50
+                [&::-webkit-scrollbar-thumb]:bg-white/30
+            '>
                 <textarea
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
