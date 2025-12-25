@@ -26,7 +26,8 @@ const ToolBar = () => {
         
             
             <input
-                placeholder="Untitled"
+                placeholder="Untitled Document"
+                maxLength={17}
                 className="
                     bg-transparent 
                     border border-transparent
@@ -43,7 +44,7 @@ const ToolBar = () => {
                 "
             />
 
-            <div className='flex items-center text-gray-700 text-xl gap-14 space-x-6'>
+            <div className='flex items-center text-gray-700 text-xl gap-14 space-x-6 ml-7'>
                 <button className={`
                     text-[12px] font-normal px-2 py-1 rounded-md whitespace-nowrap select-none transition-all border -ml-10
                     ${status === "saving" ? 
