@@ -62,12 +62,21 @@ const ChatInterface = () => {
       setInput("");
 
       setTimeout(() => {
+
+        const responses = [
+          "This is a sample response.",
+          "I can help you refine that paragraph. Would you like me to make it more concise or elaborate further?",
+          "Great idea! I've drafted a suggestion. Click the insert button to add it to your document.",
+          "Here's a polished version of your text with improved clarity and flow.",
+          "I've analyzed your request. Here's what I recommend for your document.",
+        ]
+
         setMessages((prev) => [
           ...prev,
           {
             id : Date.now() + 1,
             role : "assistant",
-            content : "This is a sample response."
+            content : responses[Math.floor(Math.random() * responses.length)]
           }
         ])
       }, 1000)

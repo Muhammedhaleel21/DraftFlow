@@ -6,7 +6,7 @@ import {
 }from "firebase/auth";
 import { auth, googleProvider } from "../firebase/auth";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function AuthPage() {
@@ -24,6 +24,21 @@ function AuthPage() {
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
+
+    const emailRef = useRef(null);
+    const passwordRef = useRef(null);
+
+    const nameRef = useRef(null);
+    const signupEmailRef = useRef(null);
+    const signupPasswordRef = useRef(null);
+    const confirmPasswordRef = useRef(null)
+
+    const handleEnter = ( e, nextRef ) => {
+        if ( e.key === "Enter" ) {
+            e.preventDefault();
+            nextRef?.current?.focus();
+        }
+    }
 
     const validateSignIn = () => {
         if (!email || !password) {
@@ -160,6 +175,8 @@ function AuthPage() {
                             required
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
+                            ref={emailRef}
+                            onKeyDown={(e) => handleEnter(e, passwordRef)}
                         />
 
                         <input
@@ -169,6 +186,10 @@ function AuthPage() {
                             required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            ref={passwordRef}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") handleSignIn();
+                            }}
                         />
 
                         { error && (
@@ -226,7 +247,9 @@ function AuthPage() {
                             className="input-field w-full max-w-sm bg-gray-100 px-4 py-3 rounded-full mb-3 outline-none focus:bg-gray-200 transition-all duration-200"
                             required
                             value={fullName}
-                            onChange={(e) => setFullName(e.target.value)} 
+                            onChange={(e) => setFullName(e.target.value)}
+                            ref={nameRef} 
+                            onKeyDown={(e) => handleEnter(e, signupEmailRef)}
                         />
                         <input 
                             type="email" 
@@ -235,6 +258,8 @@ function AuthPage() {
                             required
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
+                            ref={signupEmailRef}
+                            onKeyDown={(e) => handleEnter(e, signupPasswordRef)}
                         />
                         <input 
                             type="password" 
@@ -243,6 +268,8 @@ function AuthPage() {
                             required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            ref={signupPasswordRef}
+                            onKeyDown={(e) => handleEnter(e, confirmPasswordRef)}
                         />
                         <input 
                             type="password" 
@@ -250,7 +277,11 @@ function AuthPage() {
                             className="input-field w-full max-w-sm bg-gray-100 px-4 py-3 rounded-full mb-6 outline-none focus:bg-gray-200 transition-all duration-200"
                             required
                             value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)} 
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            ref={confirmPasswordRef}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") handleSignUp();
+                            }} 
                         />
 
                         {error && (
