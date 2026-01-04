@@ -1,13 +1,14 @@
 import React, { useRef, useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import logo from '../assets/logo1_bg.png'
 import { AiOutlineStar } from 'react-icons/ai'
 import { FiMic, FiSend } from 'react-icons/fi'
-import { useLocation, useNavigate } from 'react-router-dom'
 
 
-const ChatInterface = () => {
+const ChatInterface = ({ messages, onSend, loading }) => {
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+{/*
     const location = useLocation();
 
     const [messages, setMessages] = useState([]);
@@ -81,11 +82,25 @@ const ChatInterface = () => {
         ])
       }, 1000)
     }
+*/}
+
+  const [input, setInput] = useState("");
+  const bottomRef = useRef(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [messages]);
+
+  const handleSend = () => {
+    if (!input.trim() || loading) return;
+    onSend(input);
+    setInput("");
+  }
     
 
   return (
     <>
-      <div className='w-1/3 max-w-lg bg-[#1a1a24] text-white pt-3 flex flex-col h-screen'>
+      <div className='w-1/3 max-w-lg bg-[#1a1a24] text-white pt-3 flex flex-col h-screen shrink-0'>
 
         <div className="flex items-center gap-1 group">
             <div className="
@@ -187,6 +202,7 @@ const ChatInterface = () => {
 
             <button 
               onClick={handleSend}
+              disabled={loading}
               className="w-10 h-10 bg-purple-500 hover:bg-purple-600 rounded-full flex items-center justify-center"
             >
                 <FiSend className="text-white text-xl" />

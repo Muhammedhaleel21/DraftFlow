@@ -1,6 +1,6 @@
 import React from 'react'
 
-const DocumentContent = () => {
+const DocumentContent = ({ answer, loading }) => {
   return (
     <>
         <div className='max-w-4xl mx-auto mt-7 h-[80vh] shrink-0'>
@@ -16,12 +16,23 @@ const DocumentContent = () => {
             suppressContentEditableWarning
           >
 
-            <h1 className='text-4xl font-bold text-blue-600 text-center'>qwerty</h1>
-            <hr className='border-blue-400 my-3' />
+            
+            {loading && (
+              <p className='text-gray-400'>Generating documentation...</p>
+            )}
 
-            <h2 className="text-2xl font-semibold text-blue-700 mt-6">Subheading</h2>
+            {!loading && answer && (
+              <div className='bg-[#1e1e1e] p-4 rounded-lg text-white whitespace-pre-wrap'>
+                {answer}
+              </div>
+            )}
 
-            <p className="mt-2 text-gray-700">qwertyuiopjhgfdsasdfghnbvcxzxcvbnmhgfdssdrtyuitrewnmnbvcxzasdfghjklpoiuytrewqqqqqqwertyuioplkjhgfdsazxcvbnm,</p>
+            {!loading && !answer && (
+              <p className='text-gray-500'>
+                Ask something to generate documentation.
+              </p>
+            )}
+
           </div>
         </div>
     </>
