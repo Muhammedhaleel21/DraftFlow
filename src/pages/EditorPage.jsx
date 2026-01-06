@@ -27,14 +27,16 @@ function EditorPage() {
     console.log(userMessage)
     
 
-    
+    const documentation = "report";
+
     try {
-      const response = await api.post("", {
+      const response = await api.post("/v2/agent/format_agent", {
         raw_text: message,
         user_request: documentation,
       });
-
-      const reply = response.data.reply || response.data.converted_text;
+      console.log(response);
+      const reply = response.data.code;
+      console.log(reply);
 
       const assistantMessage = {
         id: Date.now() + 1,
@@ -42,6 +44,7 @@ function EditorPage() {
         content: reply,
       };
       setMessages((prev) => [...prev, assistantMessage]);
+      console.log(assistantMessage)
       
 
       setAnswer(reply);
@@ -72,7 +75,7 @@ function EditorPage() {
 
   return (
     <>
-        <div className='flex h-full bg-gray-100'>
+        <div className='flex h-full bg-gray-100 min-w-full'>
             <ChatInterface 
               messages={messages}
               loading={loading}
